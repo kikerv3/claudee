@@ -55,8 +55,9 @@ Requiere JDK 17 y el SDK de Android (API 35).
 ```
 
 Hay dos workflows de GitHub Actions: `android.yml` compila el APK de debug y
-corre los tests en cada push, y `release.yml` publica los APK como release al
-empujar una etiqueta `v*`.
+corre los tests en cada push, y `release.yml` publica los APK como release
+cuando cambia el fichero `VERSION`, que es también de donde sale el
+`versionName` de la app.
 
 - `minSdk` 26 (Android 8.0) · `targetSdk` 35 (Android 15)
 

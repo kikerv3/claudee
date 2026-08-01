@@ -13,7 +13,8 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+        // Única fuente de la verdad: el mismo fichero que dispara la release.
+        versionName = rootProject.file("VERSION").readText().trim()
         resourceConfigurations += listOf("es", "en")
     }
 

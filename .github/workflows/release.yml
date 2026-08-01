@@ -1,13 +1,13 @@
 name: Publish APK
 
+# La versión vive en el fichero VERSION: tocarlo es lo que corta una release.
+# El disparador no es una etiqueta porque así el mismo commit que sube la
+# versión es el que queda publicado, sin un paso manual de etiquetado.
 on:
   push:
-    tags: ["v*"]
+    branches: ["**"]
+    paths: ["VERSION"]
   workflow_dispatch:
-    inputs:
-      tag:
-        description: "Etiqueta a publicar, por ejemplo v1.0.0"
-        required: true
 
 permissions:
   contents: write
@@ -27,11 +27,9 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Resolve tag
+      - name: Read version
         id: meta
-        run: echo "tag=${TAG:-$GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
-        env:
-          TAG: ${{ inputs.tag }}
+        run: echo "tag=v$(tr -d '[:space:]' < VERSION)" >> "$GITHUB_OUTPUT"
 
       - name: Build APKs
         run: ./gradlew assembleRelease assembleDebug --stacktrace
@@ -51,19 +49,20 @@ jobs:
         run: |
           set -eu
           tag="${{ steps.meta.outputs.tag }}"
+
           notes=$(mktemp)
           cat > "$notes" <<'EOF'
           Analizador de almacenamiento estilo WinDirStat para Android.
 
           ## Instalación
 
-          Descarga **DirSpace-TAG.apk** desde los archivos de abajo y ábrelo en el
+          Descarga **DirSpace-TAG.apk** de la lista de abajo y ábrelo en el
           teléfono. Android pedirá permiso para instalar desde esa fuente: el
           interruptor está en Ajustes → Aplicaciones → Acceso especial → Instalar
           apps desconocidas, y hay que activarlo para el navegador o el gestor de
           archivos desde el que abras el APK, no para DirSpace.
 
-          Al abrir la app por primera vez pedirá acceso al almacenamiento. Este
+          Al abrir la app por primera vez pedirá acceso al almacenamiento. Ese
           permiso no se concede con el diálogo habitual: Android 11 y posteriores
           obligan a pasar por una pantalla de Ajustes donde hay que activar
           "Permitir el acceso para administrar todos los archivos". El botón de la
@@ -76,15 +75,24 @@ jobs:
 
           ## Sobre los dos archivos
 
-          Ambos APK están firmados con la clave de depuración de Android, que sirve
-          para instalar de forma manual pero no para publicar en Google Play.
+          Ambos APK van firmados con la clave de depuración de Android: sirven para
+          instalar a mano, no para publicar en Google Play.
 
           - **DirSpace-TAG.apk** — compilación de release, optimizada. Es la que
             deberías instalar.
           - **DirSpace-TAG-debug.apk** — compilación de depuración, sin optimizar.
-            Úsala solo si la anterior diera algún problema.
+            Úsala solo si la anterior diera problemas.
           EOF
           sed -i "s/TAG/$tag/g" "$notes"
-          gh release create "$tag" dist/*.apk \
-            --title "DirSpace $tag" \
-            --notes-file "$notes"
+
+          # Re-ejecutar el workflow sobre la misma versión actualiza la release
+          # en vez de fallar por etiqueta duplicada.
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" dist/*.apk --clobber
+            gh release edit "$tag" --notes-file "$notes"
+          else
+            gh release create "$tag" dist/*.apk \
+              --target "$GITHUB_SHA" \
+              --title "DirSpace $tag" \
+              --notes-file "$notes"
+          fi
