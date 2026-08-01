@@ -108,8 +108,9 @@ class AppUsageRepository(private val context: Context) {
     }
 
     private fun Drawable.toBitmap(sizePx: Int): Bitmap {
-        if (this is BitmapDrawable && bitmap != null) {
-            return Bitmap.createScaledBitmap(bitmap, sizePx, sizePx, true)
+        if (this is BitmapDrawable) {
+            val source = bitmap
+            if (source != null) return Bitmap.createScaledBitmap(source, sizePx, sizePx, true)
         }
         val bitmap = Bitmap.createBitmap(sizePx, sizePx, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)

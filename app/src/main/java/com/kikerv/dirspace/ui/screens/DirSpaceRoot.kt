@@ -103,10 +103,11 @@ fun DirSpaceRoot(
 
                 // El botón "atrás" del sistema sube un nivel; en la raíz vuelve a
                 // la lista de volúmenes en vez de cerrar la app de golpe.
-                BackHandler(enabled = true) {
-                    when {
-                        detailsNode != null -> detailsNode = null
-                        !viewModel.navigateUp() -> viewModel.backToVolumes()
+                BackHandler {
+                    if (detailsNode != null) {
+                        detailsNode = null
+                    } else if (!viewModel.navigateUp()) {
+                        viewModel.backToVolumes()
                     }
                 }
 

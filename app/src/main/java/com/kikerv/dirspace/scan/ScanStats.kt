@@ -49,7 +49,7 @@ data class ScanStats(
             stack.add(root)
             var checked = 0
             while (stack.isNotEmpty()) {
-                if (++checked and 0x3FF == 0) coroutineContext.ensureActive()
+                if ((++checked and 0x3FF) == 0) coroutineContext.ensureActive()
                 val node = stack.removeAt(stack.size - 1)
                 val children = node.children
                 if (children != null) {

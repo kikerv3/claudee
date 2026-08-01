@@ -26,7 +26,9 @@ enum class FileCategory(
     ;
 
     companion object {
-        private val BY_EXTENSION: HashMap<String, FileCategory> = HashMap(256).apply {
+        // Los argumentos de tipo van explícitos: la inferencia no los deduce a
+        // través de `apply` aunque el tipo de la propiedad ya los declare.
+        private val BY_EXTENSION = HashMap<String, FileCategory>(256).apply {
             put(VIDEO, "mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "3gp", "m4v", "mpg", "mpeg", "ts", "mts", "rmvb")
             put(IMAGE, "jpg", "jpeg", "png", "gif", "bmp", "webp", "heic", "heif", "tiff", "tif", "svg", "raw", "dng", "cr2", "nef", "ico", "avif")
             put(AUDIO, "mp3", "aac", "wav", "flac", "ogg", "opus", "m4a", "wma", "amr", "aiff", "mid", "midi", "m4b")
