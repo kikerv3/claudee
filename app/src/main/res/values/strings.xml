@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DirSpace</string>
+
+    <!-- Permisos -->
+    <string name="perm_title">Acceso al almacenamiento</string>
+    <string name="perm_body">Para dibujar el mapa de tu almacenamiento, DirSpace necesita leer los archivos del teléfono. Sólo se leen tamaños y nombres: nada sale del dispositivo.</string>
+    <string name="perm_grant">Conceder acceso</string>
+    <string name="perm_retry">Reintentar</string>
+
+    <!-- Volúmenes -->
+    <string name="volumes_title">Elige qué analizar</string>
+    <string name="volume_internal">Almacenamiento interno</string>
+    <string name="volume_sdcard">Tarjeta SD</string>
+    <string name="volume_free">%1$s libres de %2$s</string>
+
+    <!-- Escaneo -->
+    <string name="scanning">Analizando…</string>
+    <string name="scan_files">%1$s archivos</string>
+    <string name="scan_cancel">Cancelar</string>
+    <string name="rescan">Volver a analizar</string>
+
+    <!-- Pestañas -->
+    <string name="tab_tree">Carpetas</string>
+    <string name="tab_map">Mapa</string>
+    <string name="tab_types">Tipos</string>
+    <string name="tab_big">Grandes</string>
+    <string name="tab_apps">Apps</string>
+
+    <!-- Explorador -->
+    <string name="empty_folder">Carpeta vacía</string>
+    <string name="sort_size">Tamaño</string>
+    <string name="sort_name">Nombre</string>
+    <string name="sort_date">Fecha</string>
+    <string name="sort_count">Nº de archivos</string>
+
+    <!-- Detalle / acciones -->
+    <string name="action_open">Abrir</string>
+    <string name="action_share">Compartir</string>
+    <string name="action_delete">Eliminar</string>
+    <string name="action_locate">Ver en carpeta</string>
+    <string name="delete_title">¿Eliminar?</string>
+    <string name="delete_file_msg">Se eliminará «%1$s» (%2$s). Esta acción no se puede deshacer.</string>
+    <string name="delete_dir_msg">Se eliminará la carpeta «%1$s» con %2$d archivos (%3$s). Esta acción no se puede deshacer.</string>
+    <string name="confirm">Eliminar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="deleted_ok">Eliminado: %1$s liberados</string>
+    <string name="deleted_partial">Eliminación parcial: %1$s liberados</string>
+    <string name="deleted_fail">No se pudo eliminar</string>
+    <string name="no_app_to_open">No hay ninguna app que pueda abrir este archivo</string>
+
+    <!-- Tipos -->
+    <string name="types_title">Uso por tipo de archivo</string>
+
+    <!-- Grandes -->
+    <string name="big_title">Archivos más grandes</string>
+
+    <!-- Apps -->
+    <string name="apps_title">Uso por aplicación</string>
+    <string name="apps_need_usage">Para ver cuánto ocupa cada app hace falta el permiso «Acceso a datos de uso».</string>
+    <string name="apps_open_settings">Abrir ajustes</string>
+    <string name="app_breakdown">App %1$s · Datos %2$s · Caché %3$s</string>
+
+    <!-- Común -->
+    <string name="total_used">%1$s usados</string>
+    <string name="back">Atrás</string>
+    <string name="error_generic">Algo salió mal: %1$s</string>
+
+    <!-- Categorias -->
+    <string name="cat_video">Vídeo</string>
+    <string name="cat_image">Imagen</string>
+    <string name="cat_audio">Audio</string>
+    <string name="cat_document">Documento</string>
+    <string name="cat_archive">Comprimido</string>
+    <string name="cat_app">Aplicación</string>
+    <string name="cat_code">Código</string>
+    <string name="cat_data">Datos</string>
+    <string name="cat_font">Fuente</string>
+    <string name="cat_other">Otros</string>
+    <string name="cat_folder">Carpeta</string>
+    <string name="detail_share">Peso relativo</string>
+    <string name="detail_files">Archivos</string>
+    <string name="detail_modified">Modificado</string>
+</resources>

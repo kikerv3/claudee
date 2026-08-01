@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Mini treemap: bloques de distintos tamaños, como el mapa de la app -->
+    <path android:pathData="M30,30 h27 v27 h-27 z" android:fillColor="#FF5A5F" />
+    <path android:pathData="M59,30 h19 v15 h-19 z" android:fillColor="#FFB020" />
+    <path android:pathData="M59,47 h19 v10 h-19 z" android:fillColor="#F2E14C" />
+    <path android:pathData="M30,59 h16 v19 h-16 z" android:fillColor="#3DDC84" />
+    <path android:pathData="M48,59 h13 v11 h-13 z" android:fillColor="#38B6FF" />
+    <path android:pathData="M48,72 h13 v6 h-13 z" android:fillColor="#8E7CFF" />
+    <path android:pathData="M63,59 h15 v19 h-15 z" android:fillColor="#00C2B2" />
+</vector>

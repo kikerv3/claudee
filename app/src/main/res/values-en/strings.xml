@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DirSpace</string>
+
+    <string name="perm_title">Storage access</string>
+    <string name="perm_body">To draw the map of your storage, DirSpace needs to read the files on your phone. Only names and sizes are read — nothing leaves the device.</string>
+    <string name="perm_grant">Grant access</string>
+    <string name="perm_retry">Retry</string>
+
+    <string name="volumes_title">Choose what to analyse</string>
+    <string name="volume_internal">Internal storage</string>
+    <string name="volume_sdcard">SD card</string>
+    <string name="volume_free">%1$s free of %2$s</string>
+
+    <string name="scanning">Scanning…</string>
+    <string name="scan_files">%1$s files</string>
+    <string name="scan_cancel">Cancel</string>
+    <string name="rescan">Scan again</string>
+
+    <string name="tab_tree">Folders</string>
+    <string name="tab_map">Map</string>
+    <string name="tab_types">Types</string>
+    <string name="tab_big">Largest</string>
+    <string name="tab_apps">Apps</string>
+
+    <string name="empty_folder">Empty folder</string>
+    <string name="sort_size">Size</string>
+    <string name="sort_name">Name</string>
+    <string name="sort_date">Date</string>
+    <string name="sort_count">File count</string>
+
+    <string name="action_open">Open</string>
+    <string name="action_share">Share</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_locate">Show in folder</string>
+    <string name="delete_title">Delete?</string>
+    <string name="delete_file_msg">\"%1$s\" (%2$s) will be deleted. This cannot be undone.</string>
+    <string name="delete_dir_msg">Folder \"%1$s\" with %2$d files (%3$s) will be deleted. This cannot be undone.</string>
+    <string name="confirm">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="deleted_ok">Deleted: %1$s freed</string>
+    <string name="deleted_partial">Partially deleted: %1$s freed</string>
+    <string name="deleted_fail">Could not delete</string>
+    <string name="no_app_to_open">No app can open this file</string>
+
+    <string name="types_title">Usage by file type</string>
+
+    <string name="big_title">Largest files</string>
+
+    <string name="apps_title">Usage by app</string>
+    <string name="apps_need_usage">Seeing how much each app uses requires the \"Usage access\" permission.</string>
+    <string name="apps_open_settings">Open settings</string>
+    <string name="app_breakdown">App %1$s · Data %2$s · Cache %3$s</string>
+
+    <string name="total_used">%1$s used</string>
+    <string name="back">Back</string>
+    <string name="error_generic">Something went wrong: %1$s</string>
+
+    <!-- Categorias -->
+    <string name="cat_video">Video</string>
+    <string name="cat_image">Image</string>
+    <string name="cat_audio">Audio</string>
+    <string name="cat_document">Document</string>
+    <string name="cat_archive">Archive</string>
+    <string name="cat_app">Application</string>
+    <string name="cat_code">Code</string>
+    <string name="cat_data">Data</string>
+    <string name="cat_font">Font</string>
+    <string name="cat_other">Other</string>
+    <string name="cat_folder">Folder</string>
+    <string name="detail_share">Share of parent</string>
+    <string name="detail_files">Files</string>
+    <string name="detail_modified">Modified</string>
+</resources>
