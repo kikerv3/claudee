@@ -12,9 +12,14 @@ android {
         applicationId = "com.kikerv.dirspace"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
         // Única fuente de la verdad: el mismo fichero que dispara la release.
         versionName = rootProject.file("VERSION").readText().trim()
+        // Android sólo deja actualizar una app instalada si este número sube,
+        // así que se deriva de la versión en vez de tocarlo a mano.
+        versionCode = versionName!!.split(".").let { parts ->
+            val part = { index: Int -> parts.getOrNull(index)?.toIntOrNull() ?: 0 }
+            part(0) * 10_000 + part(1) * 100 + part(2)
+        }
         resourceConfigurations += listOf("es", "en")
     }
 
