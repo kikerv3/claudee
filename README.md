@@ -26,6 +26,14 @@ red: los nombres y tamaños de tus archivos nunca salen del teléfono.
 - Interno y tarjeta SD, tema claro/oscuro con colores dinámicos (Android 12+),
   español e inglés.
 
+## Instalar
+
+Descarga el APK desde la [última release](https://github.com/kikerv3/claudee/releases/latest)
+y ábrelo en el teléfono. Requiere Android 8.0 o superior.
+
+Los APK publicados van firmados con la clave de depuración de Android: sirven
+para instalar de forma manual, no para publicar en Google Play.
+
 ## Permisos
 
 | Permiso | Para qué | Cómo se concede |
@@ -46,8 +54,9 @@ Requiere JDK 17 y el SDK de Android (API 35).
 ./gradlew testDebugUnitTest  # tests del algoritmo de treemap y los formateadores
 ```
 
-El workflow de GitHub Actions (`.github/workflows/android.yml`) compila el APK
-de debug en cada push y lo publica como artefacto.
+Hay dos workflows de GitHub Actions: `android.yml` compila el APK de debug y
+corre los tests en cada push, y `release.yml` publica los APK como release al
+empujar una etiqueta `v*`.
 
 - `minSdk` 26 (Android 8.0) · `targetSdk` 35 (Android 15)
 

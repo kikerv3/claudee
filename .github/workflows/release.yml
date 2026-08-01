@@ -1,0 +1,90 @@
+name: Publish APK
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Etiqueta a publicar, por ejemplo v1.0.0"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Resolve tag
+        id: meta
+        run: echo "tag=${TAG:-$GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+        env:
+          TAG: ${{ inputs.tag }}
+
+      - name: Build APKs
+        run: ./gradlew assembleRelease assembleDebug --stacktrace
+
+      - name: Collect APKs
+        run: |
+          set -eu
+          tag="${{ steps.meta.outputs.tag }}"
+          mkdir -p dist
+          cp app/build/outputs/apk/release/app-release.apk "dist/DirSpace-$tag.apk"
+          cp app/build/outputs/apk/debug/app-debug.apk "dist/DirSpace-$tag-debug.apk"
+          ls -lh dist
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          tag="${{ steps.meta.outputs.tag }}"
+          notes=$(mktemp)
+          cat > "$notes" <<'EOF'
+          Analizador de almacenamiento estilo WinDirStat para Android.
+
+          ## Instalación
+
+          Descarga **DirSpace-TAG.apk** desde los archivos de abajo y ábrelo en el
+          teléfono. Android pedirá permiso para instalar desde esa fuente: el
+          interruptor está en Ajustes → Aplicaciones → Acceso especial → Instalar
+          apps desconocidas, y hay que activarlo para el navegador o el gestor de
+          archivos desde el que abras el APK, no para DirSpace.
+
+          Al abrir la app por primera vez pedirá acceso al almacenamiento. Este
+          permiso no se concede con el diálogo habitual: Android 11 y posteriores
+          obligan a pasar por una pantalla de Ajustes donde hay que activar
+          "Permitir el acceso para administrar todos los archivos". El botón de la
+          app lleva ahí directamente.
+
+          La pestaña Apps necesita un segundo permiso aparte, "Acceso a datos de
+          uso". Sin él las otras cuatro pestañas funcionan con normalidad.
+
+          Requiere Android 8.0 o superior.
+
+          ## Sobre los dos archivos
+
+          Ambos APK están firmados con la clave de depuración de Android, que sirve
+          para instalar de forma manual pero no para publicar en Google Play.
+
+          - **DirSpace-TAG.apk** — compilación de release, optimizada. Es la que
+            deberías instalar.
+          - **DirSpace-TAG-debug.apk** — compilación de depuración, sin optimizar.
+            Úsala solo si la anterior diera algún problema.
+          EOF
+          sed -i "s/TAG/$tag/g" "$notes"
+          gh release create "$tag" dist/*.apk \
+            --title "DirSpace $tag" \
+            --notes-file "$notes"
