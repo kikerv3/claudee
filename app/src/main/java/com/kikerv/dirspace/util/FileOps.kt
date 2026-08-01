@@ -10,6 +10,8 @@ import com.kikerv.dirspace.model.FsNode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.util.Collections
+import java.util.IdentityHashMap
 
 data class DeleteResult(
     val bytesFreed: Long,
@@ -54,6 +56,40 @@ object FileOps {
         true
     } catch (e: Exception) {
         false
+    }
+
+    /**
+     * Borra varios nodos y devuelve el total liberado.
+     *
+     * Descarta los que cuelgan de otro de la propia selección: borrar la carpeta
+     * padre ya se lleva al hijo, y volver a contarlo descuadraría los tamaños
+     * del árbol en memoria.
+     */
+    suspend fun deleteAll(nodes: Collection<FsNode>): DeleteResult {
+        val selected = Collections.newSetFromMap(IdentityHashMap<FsNode, Boolean>())
+        selected.addAll(nodes)
+
+        val roots = nodes.filter { node ->
+            var ancestor = node.parent
+            while (ancestor != null) {
+                if (ancestor in selected) return@filter false
+                ancestor = ancestor.parent
+            }
+            true
+        }
+
+        var bytes = 0L
+        var files = 0
+        var dirs = 0
+        var complete = true
+        for (node in roots) {
+            val result = delete(node)
+            bytes += result.bytesFreed
+            files += result.filesDeleted
+            dirs += result.dirsDeleted
+            if (!result.complete) complete = false
+        }
+        return DeleteResult(bytes, files, dirs, complete)
     }
 
     /**

@@ -60,6 +60,21 @@ class AppUsageRepository(private val context: Context) {
         return mode == AppOpsManager.MODE_ALLOWED
     }
 
+    /**
+     * Paquetes instalados. La limpieza los usa para distinguir los datos de una
+     * app viva de los restos de otra que ya se desinstaló. No necesita el
+     * permiso de datos de uso.
+     */
+    suspend fun installedPackageNames(): Set<String> = withContext(Dispatchers.IO) {
+        try {
+            context.packageManager
+                .getInstalledApplications(0)
+                .mapTo(HashSet()) { it.packageName }
+        } catch (e: Exception) {
+            emptySet()
+        }
+    }
+
     suspend fun load(iconSizePx: Int = 128): List<AppUsage> = withContext(Dispatchers.IO) {
         val statsManager = context.getSystemService(Context.STORAGE_STATS_SERVICE)
             as? StorageStatsManager ?: return@withContext emptyList()

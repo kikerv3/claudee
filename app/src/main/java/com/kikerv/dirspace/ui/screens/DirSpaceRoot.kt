@@ -46,6 +46,7 @@ fun DirSpaceRoot(
     onRequestStoragePermission: () -> Unit,
     onRequestUsageAccess: () -> Unit,
     onOpenAppInfo: (String) -> Unit,
+    onOpenSystemStorage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -59,6 +60,9 @@ fun DirSpaceRoot(
     val sortMode by viewModel.sortMode.collectAsStateWithLifecycle()
     val appsState by viewModel.appsState.collectAsStateWithLifecycle()
     val treeRevision by viewModel.treeRevision.collectAsStateWithLifecycle()
+    val cleanState by viewModel.cleanState.collectAsStateWithLifecycle()
+    val duplicateState by viewModel.duplicateState.collectAsStateWithLifecycle()
+    val cleanSelection by viewModel.cleanSelection.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
     var detailsNode by remember { mutableStateOf<FsNode?>(null) }
@@ -120,6 +124,9 @@ fun DirSpaceRoot(
                     tab = tab,
                     sortMode = sortMode,
                     appsState = appsState,
+                    cleanState = cleanState,
+                    duplicateState = duplicateState,
+                    cleanSelection = cleanSelection,
                     treeRevision = treeRevision,
                     snackbarHostState = snackbarHostState,
                     onTabSelected = viewModel::selectTab,
@@ -139,6 +146,14 @@ fun DirSpaceRoot(
                     onOpenFile = { node ->
                         if (!FileOps.open(context, node.file)) viewModel.emitNoAppToOpen()
                     },
+                    onAnalyzeClean = viewModel::analyzeClean,
+                    onToggleCleanItem = viewModel::toggleCleanItem,
+                    onToggleCleanGroup = viewModel::setGroupSelected,
+                    onSelectSafeOnly = viewModel::selectSafeOnly,
+                    onDeleteSelection = viewModel::deleteSelection,
+                    onFindDuplicates = viewModel::findDuplicates,
+                    onCancelDuplicates = viewModel::cancelDuplicates,
+                    onOpenSystemStorage = onOpenSystemStorage,
                 )
             }
 

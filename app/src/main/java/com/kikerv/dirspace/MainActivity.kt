@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.storage.StorageManager
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -37,6 +38,7 @@ class MainActivity : ComponentActivity() {
                     onRequestStoragePermission = ::requestStoragePermission,
                     onRequestUsageAccess = ::openUsageAccessSettings,
                     onOpenAppInfo = ::openAppInfo,
+                    onOpenSystemStorage = ::openSystemStorageManager,
                     modifier = Modifier,
                 )
             }
@@ -64,6 +66,17 @@ class MainActivity : ComponentActivity() {
         } else {
             legacyPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
         }
+    }
+
+    /**
+     * Pantalla del sistema para liberar espacio. Es la única vía para vaciar la
+     * caché de otras apps: desde Android 8 ninguna app de terceros puede
+     * hacerlo por su cuenta, y desde Android 11 ni siquiera puede ver
+     * Android/data para intentarlo.
+     */
+    private fun openSystemStorageManager() {
+        val managed = launchSettings(Intent(StorageManager.ACTION_MANAGE_STORAGE))
+        if (!managed) launchSettings(Intent(Settings.ACTION_INTERNAL_STORAGE_SETTINGS))
     }
 
     private fun openUsageAccessSettings() {

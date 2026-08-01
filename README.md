@@ -17,6 +17,12 @@ red: los nombres y tamaños de tus archivos nunca salen del teléfono.
   archivos, con barra de proporción y navegación por migas de pan.
 - **Tipos** — reparto del espacio por categoría (vídeo, imagen, audio…) y el
   desglose completo extensión por extensión.
+- **Limpieza** — encuentra lo que sobra y lo borra en bloque: temporales,
+  miniaturas, papeleras, registros, carpetas vacías, restos de apps
+  desinstaladas, instaladores APK, archivos grandes que llevan medio año sin
+  tocarse y duplicados idénticos byte a byte. Cada categoría lleva su nivel de
+  riesgo: sólo se marcan solas las que el sistema regenera, y el botón de
+  limpieza rápida borra exactamente esas.
 - **Grandes** — los 250 archivos más pesados del volumen, estén donde estén.
 - **Apps** — cuánto ocupa cada aplicación (APK + datos + caché). El escaneo de
   archivos no puede ver `/data/data`, así que este dato viene de
@@ -66,6 +72,7 @@ cuando cambia el fichero `VERSION`, que es también de donde sale el
 ```
 model/      FsNode (árbol de archivos) y categorías por extensión
 scan/       recorrido del volumen, detección de volúmenes, estadísticas
+clean/      reglas de limpieza y detección de duplicados
 apps/       tamaño por aplicación vía StorageStatsManager
 ui/treemap/ algoritmo squarified + rasterizado del mapa
 ui/screens/ permisos, volúmenes, escaneo y las cinco pestañas
@@ -78,6 +85,15 @@ Dos decisiones que explican casi todo el código:
 miles de archivos; guardar la ruta completa en cada nodo cuesta decenas de MB.
 `FsNode` guarda sólo el nombre y el padre, y reconstruye la ruta subiendo por la
 cadena cuando hace falta.
+
+**Lo que se borra en bloque tiene que ser regenerable.** Las categorías de
+limpieza se dividen en dos niveles de riesgo. Sólo llegan marcadas las que el
+sistema o las apps vuelven a crear cuando hacen falta, y la limpieza rápida
+borra exactamente ese conjunto. Por eso `.bak` y `.old` no cuentan como
+temporales, y una carpeta sólo se trata como papelera si su nombre no puede
+haberlo elegido una persona para guardar sus cosas. Los duplicados se comparan
+leyendo el contenido completo, no sólo el tamaño y la cabecera, y de cada grupo
+idéntico nunca se ofrece la última copia.
 
 **El mapa se rasteriza una vez, no en cada frame.** Un volumen grande genera
 miles de rectángulos; pintarlos en cada frame haría el scroll inservible. El

@@ -8,6 +8,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.CleaningServices
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Straighten
@@ -32,7 +33,10 @@ import com.kikerv.dirspace.R
 import com.kikerv.dirspace.model.FsNode
 import com.kikerv.dirspace.scan.ScanStats
 import com.kikerv.dirspace.scan.StorageVolumeInfo
+import com.kikerv.dirspace.clean.CleanGroup
 import com.kikerv.dirspace.ui.AppsUiState
+import com.kikerv.dirspace.ui.CleanUiState
+import com.kikerv.dirspace.ui.DuplicateUiState
 import com.kikerv.dirspace.ui.SortMode
 import com.kikerv.dirspace.ui.Tab
 import com.kikerv.dirspace.ui.components.Breadcrumb
@@ -51,6 +55,9 @@ fun ExplorerScreen(
     tab: Tab,
     sortMode: SortMode,
     appsState: AppsUiState,
+    cleanState: CleanUiState,
+    duplicateState: DuplicateUiState,
+    cleanSelection: Set<FsNode>,
     treeRevision: Int,
     snackbarHostState: SnackbarHostState,
     onTabSelected: (Tab) -> Unit,
@@ -63,6 +70,14 @@ fun ExplorerScreen(
     onRequestUsageAccess: () -> Unit,
     onOpenAppInfo: (String) -> Unit,
     onOpenFile: (FsNode) -> Unit,
+    onAnalyzeClean: () -> Unit,
+    onToggleCleanItem: (FsNode) -> Unit,
+    onToggleCleanGroup: (CleanGroup, Boolean) -> Unit,
+    onSelectSafeOnly: () -> Unit,
+    onDeleteSelection: () -> Unit,
+    onFindDuplicates: () -> Unit,
+    onCancelDuplicates: () -> Unit,
+    onOpenSystemStorage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -101,8 +116,10 @@ fun ExplorerScreen(
                     NavigationBarItem(
                         selected = tab == spec.tab,
                         onClick = { onTabSelected(spec.tab) },
-                        icon = { Icon(spec.icon, contentDescription = null) },
+                        icon = { Icon(spec.icon, contentDescription = stringResource(spec.labelRes)) },
                         label = { Text(stringResource(spec.labelRes)) },
+                        // Seis destinos no caben con todas las etiquetas a la vez.
+                        alwaysShowLabel = false,
                     )
                 }
             }
@@ -153,6 +170,21 @@ fun ExplorerScreen(
                     }
                 }
 
+                Tab.CLEAN -> CleanTab(
+                    state = cleanState,
+                    duplicateState = duplicateState,
+                    selection = cleanSelection,
+                    onAnalyze = onAnalyzeClean,
+                    onToggleItem = onToggleCleanItem,
+                    onToggleGroup = onToggleCleanGroup,
+                    onSelectSafeOnly = onSelectSafeOnly,
+                    onDelete = onDeleteSelection,
+                    onFindDuplicates = onFindDuplicates,
+                    onCancelDuplicates = onCancelDuplicates,
+                    onOpenSystemStorage = onOpenSystemStorage,
+                    modifier = Modifier.weight(1f),
+                )
+
                 Tab.TYPES -> TypesTab(
                     categories = stats.categories,
                     extensions = stats.extensions,
@@ -198,6 +230,7 @@ private class TabSpec(
         val ALL = listOf(
             TabSpec(Tab.TREE, Icons.AutoMirrored.Filled.List, R.string.tab_tree),
             TabSpec(Tab.MAP, Icons.Filled.GridView, R.string.tab_map),
+            TabSpec(Tab.CLEAN, Icons.Filled.CleaningServices, R.string.tab_clean),
             TabSpec(Tab.TYPES, Icons.Filled.Category, R.string.tab_types),
             TabSpec(Tab.LARGEST, Icons.Filled.Straighten, R.string.tab_big),
             TabSpec(Tab.APPS, Icons.Filled.Android, R.string.tab_apps),
