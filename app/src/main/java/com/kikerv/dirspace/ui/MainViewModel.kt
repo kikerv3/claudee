@@ -235,11 +235,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun reloadApps() {
-        _appsState.value = AppsUiState.NeedsPermission
-        loadApps()
-    }
-
     fun emitNoAppToOpen() {
         _toasts.tryEmit(Toast.NoAppToOpen)
     }
